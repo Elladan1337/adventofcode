@@ -2,8 +2,6 @@ library(tidyverse)
 library(rlist)
 
 input <- readLines("input9.txt")
-test_input <- readLines("test9.txt")
-
 
 solve <- function(input){
 head <- c(0,0)
@@ -133,3 +131,8 @@ moveDiagonal <- function(tail, head){
   return(tail)
 }
 
+## Part 1 
+solve(input)[1]
+
+## Part 2
+solve(input)[2]
