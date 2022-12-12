@@ -1,13 +1,10 @@
 library(tidyverse)
 library(rlist)
 
-
-
 to_numbers <- function(x){
   if(is.na(as.numeric(x)) == FALSE) {return (as.numeric(x))}
   return(which(letters == x))
 }
-
 
 get_kids <- function(map, parent){
   kids <- list()
@@ -22,14 +19,16 @@ get_kids <- function(map, parent){
   return(kids)
 }
 
-main <- function(map, start_position){
+main <- function(map, start_position, end_position){
   matice_vzdalenosti <- matrix(1000000, nrow = nrow(map), ncol = ncol(map))
   queue <- list(start_position)
   matice_vzdalenosti[start_position[1], start_position[2]] <- 0
+  map[start_position[1], start_position[2]] <- 1
+  map[end_position[1], end_position[2]] <- 26
   reached <- list(start_position)
   while(length(queue) != 0){
     parent <- queue[[1]]
-    if(map[parent[1], parent[2]] == 27)
+    if(identical(as.vector(parent), (as.numeric(end_position))))
     {final_matrix <<- matice_vzdalenosti
       return(matice_vzdalenosti[parent[1], parent[2]])}
     queue <- queue[-1]
@@ -41,7 +40,7 @@ main <- function(map, start_position){
         matice_vzdalenosti[parent[1], parent[2]] + 1
       queue <- list.append(queue, kid)
     }
-  print(queue)}
+  }
 return(matice_vzdalenosti)}
 
 parsed <-read_lines("input12.txt") %>%
@@ -52,10 +51,11 @@ parsed <- lapply(parsed, str_replace_all, "S", "0") %>%
 
 map <- matrix(sapply(unlist(parsed), to_numbers), ncol = length(parsed[[1]]), nrow = length(parsed), byrow = TRUE)
 starting_position <- which(map == 0, arr.ind = TRUE)
+end_position <- which(map == 27, arr.ind = TRUE)
 
 final_matrix <- matrix()
 
-main(map, starting_position)
+main(map, starting_position, end_position)
 
 
 ## Part 2
@@ -63,6 +63,7 @@ reverse_main <- function(map, start_position){
   matice_vzdalenosti <- matrix(1000000, nrow = nrow(map), ncol = ncol(map))
   queue <- list(start_position)
   matice_vzdalenosti[start_position[1], start_position[2]] <- 0
+  map[start_position[1], start_position[2]] <- 26
   reached <- list(start_position)
   while(length(queue) != 0){
     parent <- queue[[1]]
